@@ -58,13 +58,13 @@ ul#countdown li {
   padding: 0;
   display: inline-block;
   width: 25%;
-  font-size: 72px;
+  font-size: 62px;
   font-size: 6vw;
   text-align: center;
 }
 ul#countdown li .label {
   color: #adafb2;
-  font-size: 18px;
+  font-size: 12px;
   font-size: 1.5vw;
   text-transform: uppercase;
 }
@@ -73,13 +73,13 @@ ul#title li {
   margin: 0 -3px 0 0;
   padding: 0;
   display: inline-block;
-  font-size: 72px;
+  font-size: 62px;
   font-size: 6vw;
   text-align: center;
 }
 ul#title li .label {
   color: #adafb2;
-  font-size: 18px;
+  font-size: 12px;
   font-size: 1.5vw;
   text-transform: uppercase;
 }
@@ -88,13 +88,13 @@ ul#lastoccurence li {
   margin: 0 -3px 0 0;
   padding: 0;
   display: inline-block;
-  font-size: 72px;
+  font-size: 62px;
   font-size: 6vw;
   text-align: center;
 }
 ul#lastoccurence li .label {
   color: #adafb2;
-  font-size: 18px;
+  font-size: 12px;
   font-size: 1.5vw;
   text-transform: uppercase;
 }
