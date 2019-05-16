@@ -1,0 +1,47 @@
+Arguments: 
+  /opt/node-v12.2.0-linux-x64/bin/node /opt/node-v12.2.0-linux-x64/bin/yarn add typescript express @types/nodes @types/express ts-node
+
+PATH: 
+  /opt/node-v12.2.0-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath_target_7090984:/mnt/c/Windows/System32:/mnt/c/Windows:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Windows/System32:/mnt/c/Windows:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Windows/System32/OpenSSH:/mnt/c/Users/Vitor/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Vitor/AppData/Local/Programs/Git/cmd:/mnt/c/Users/Vitor/AppData/Local/Programs/Microsoft VS Code Insiders/bin:/snap/bin
+
+Yarn version: 
+  1.16.0
+
+Node version: 
+  12.2.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@types%2fnodes: Not found
+      at Request.params.callback [as _callback] (/opt/node-v12.2.0-linux-x64/lib/node_modules/yarn/lib/cli.js:66091:18)
+      at Request.self.callback (/opt/node-v12.2.0-linux-x64/lib/node_modules/yarn/lib/cli.js:129590:22)
+      at Request.emit (events.js:196:13)
+      at Request.<anonymous> (/opt/node-v12.2.0-linux-x64/lib/node_modules/yarn/lib/cli.js:130562:10)
+      at Request.emit (events.js:196:13)
+      at IncomingMessage.<anonymous> (/opt/node-v12.2.0-linux-x64/lib/node_modules/yarn/lib/cli.js:130484:12)
+      at Object.onceWrapper (events.js:284:20)
+      at IncomingMessage.emit (events.js:201:15)
+      at endReadableNT (_stream_readable.js:1130:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:9)
+
+npm manifest: 
+  {
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -7,6 +7,7 @@
     "@types/node": "12.0.2",
     "@types/react": "16.8.17",
     "@types/react-dom": "16.8.4",
+    "axios": "^0.18.0",
     "bulma": "^0.7.4",
     "momentjs": "^2.0.0",
     "react": "^16.8.6",
