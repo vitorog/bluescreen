@@ -2,8 +2,10 @@ import express from "express";
 import { NextFunction, Request, Response } from "express";
 import { Datastore } from "@google-cloud/datastore";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 type Incident = {
+  id: string;
   name: string;
   date: string;
 };
@@ -17,9 +19,20 @@ const datastore = new Datastore({
 
 const kind = "BluescreenIncidents";
 
+const corsOptions = {
+  origin: 'https://bluescreen.appspot.com',
+  optionsSuccessStatus: 200,
+  methods: ["GET", "POST"]
+};
+
 async function getData() {
-  const query = datastore.createQuery(kind);
-  return await datastore.runQuery(query);
+  const query = datastore.createQuery(kind).order("date", { descending: true });
+  const [incidents] = await datastore.runQuery(query);
+  return incidents.map((elem: any) => ({
+    name: elem.name,
+    date: elem.date,
+    id: elem[datastore.KEY].id
+  }));
 }
 
 async function saveData(entity: Incident) {
@@ -52,6 +65,7 @@ const errorHandler = (
 
 // Create Express server
 const app = express();
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // Express configuration
@@ -69,11 +83,12 @@ app.get("/incidents", async (req, res, next) => {
     next(e);
   }
 });
+
 app.post("/incidents", async (req, res, next) => {
   try {
     const entity = req.body;
     await saveData(entity);
-    res.status(200);
+    res.sendStatus(200);
   } catch (e) {
     next(e);
   }

@@ -42,21 +42,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var datastore_1 = require("@google-cloud/datastore");
 var body_parser_1 = __importDefault(require("body-parser"));
+var cors_1 = __importDefault(require("cors"));
 var PROJECT_ID = "bluescreen";
 // Creates a client
 var datastore = new datastore_1.Datastore({
     projectId: PROJECT_ID
 });
 var kind = "BluescreenIncidents";
+var corsOptions = {
+    origin: 'https://bluescreen.appspot.com',
+    optionsSuccessStatus: 200,
+    methods: ["GET", "POST"]
+};
 function getData() {
     return __awaiter(this, void 0, void 0, function () {
-        var query;
+        var query, incidents;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    query = datastore.createQuery(kind);
+                    query = datastore.createQuery(kind).order("date", { descending: true });
                     return [4 /*yield*/, datastore.runQuery(query)];
-                case 1: return [2 /*return*/, _a.sent()];
+                case 1:
+                    incidents = (_a.sent())[0];
+                    return [2 /*return*/, incidents.map(function (elem) { return ({
+                            name: elem.name,
+                            date: elem.date,
+                            id: elem[datastore.KEY].id
+                        }); })];
             }
         });
     });
@@ -90,6 +102,7 @@ var errorHandler = function (err, req, res, next) {
 };
 // Create Express server
 var app = express_1.default();
+app.use(cors_1.default(corsOptions));
 app.use(body_parser_1.default.json());
 // Express configuration
 app.set("port", process.env.PORT || 3001);
@@ -125,7 +138,7 @@ app.post("/incidents", function (req, res, next) { return __awaiter(_this, void 
                 return [4 /*yield*/, saveData(entity)];
             case 1:
                 _a.sent();
-                res.status(200);
+                res.sendStatus(200);
                 return [3 /*break*/, 3];
             case 2:
                 e_2 = _a.sent();

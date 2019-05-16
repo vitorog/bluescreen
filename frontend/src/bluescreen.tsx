@@ -2,14 +2,20 @@ import React from "react";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import LoadingOverlay from "react-loading-overlay";
+import axios from "axios";
+import DatePicker from "react-datepicker";
 
 let interval = null;
+
+const API = 'https://backend-dot-bluescreen.appspot.com/incidents';
 
 type BluescreenState = {
   isNameModalVisible: boolean;
   now: number;
   isLoadingData: boolean;
   data: Array<any>;
+  incidentDate: Date;
+  name: string;
 };
 
 export default class Bluescreen extends React.Component<{}, BluescreenState> {
@@ -18,14 +24,21 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
     this.state = {
       isNameModalVisible: false,
       now: Date.now(),
-      isLoadingData: false,
-      data: [{ name: "Vitor Gomes", date: moment(Date.now()).format() }, { name: "Vitor Gomes", date: moment(Date.now()).format() }]
+      isLoadingData: true,
+      data: [],
+      incidentDate: new Date(),
+      name: ""
     };
   }
 
-  calculateDateDiff(lastDate: Date) {
-    var b = moment([2019, 4, 14, 21, 5, 0]);
-    var duration = moment.duration(moment(this.state.now).diff(b));
+  calculateDateDiff() {
+    let latest;
+    if (this.state.data.length > 0) {
+      latest = moment(this.state.data[0].date);
+    } else {
+      latest = Date.now();
+    }
+    var duration = moment.duration(moment(this.state.now).diff(latest));
     return (
       duration.get("days") +
       " dia(s) " +
@@ -38,9 +51,11 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
     );
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     interval = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    this.fetchData();
   }
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -49,10 +64,31 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
     this.setState({ isNameModalVisible: !this.state.isNameModalVisible });
   };
 
-  addIncident = () => {
+  addIncident = async () => {
     this.toggleNameModal();
-    // TODO;
+    await axios.post(API, {
+      name: this.state.name,
+      date: this.state.incidentDate
+    });
     toast.success("Sua ocorrência foi salva!");
+    this.setState({ name: "", incidentDate: new Date() }, () =>
+      this.fetchData()
+    );
+  };
+
+  handleDateChange = date => {
+    this.setState({ incidentDate: date });
+  };
+
+  handleNameChange = evt => {
+    this.setState({ name: evt.target.value });
+  };
+
+  fetchData = async () => {
+    this.setState({ isLoadingData: true }, async () => {
+      const response = await axios.get(API);
+      this.setState({ isLoadingData: false, data: response.data });
+    });
   };
 
   renderModal() {
@@ -63,7 +99,7 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Qual seu nome?</p>
+            <p className="modal-card-title">Registrar Tela Azul</p>
             <button
               className="delete"
               aria-label="close"
@@ -71,7 +107,31 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
             />
           </header>
           <section className="modal-card-body">
-            <input className="input" type="text" />
+            <div className="columns">
+              <div className="column is-two-thirds">
+                <label className="label is-pulled-left">Nome:</label>
+                <input
+                  id="name"
+                  className="input"
+                  type="text"
+                  onChange={this.handleNameChange}
+                />
+              </div>
+              <div className="column">
+                <label className="label is-pulled-left">Data:</label>
+                <div className="control">
+                  <DatePicker
+                    className="input"
+                    selected={this.state.incidentDate}
+                    onChange={this.handleDateChange}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    timeIntervals={15}
+                  />
+                </div>
+              </div>
+            </div>
           </section>
           <footer className="modal-card-foot">
             <button className="button is-success" onClick={this.addIncident}>
@@ -98,15 +158,17 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
           <div className="column is-half">
             <table className="table is-fullwidth is-bordered incidents-table">
               <thead>
-                <th>Nome</th>
-                <th>Data</th>
+                <tr>
+                  <th>Nome</th>
+                  <th>Data</th>
+                </tr>
               </thead>
               <tbody>
                 {this.state.data.map(elem => {
                   return (
-                    <tr>
+                    <tr key={elem.id}>
                       <td>{elem.name}</td>
-                      <td>{elem.date}</td>
+                      <td>{moment(elem.date, "YYYY-MM-DDThh:mm:ssZ").format("YYYY-MM-DD hh:mm:ss")}</td>
                     </tr>
                   );
                 })}
@@ -119,19 +181,21 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
   };
 
   render() {
+    let latest = this.state.data.length > 0 ? Date.now() : Date.now();
     return (
       <div className="App">
         {this.renderModal()}
         <section className="hero is-fullheight is-info is-bold">
           <div className="hero-body">
             <div className="container">
-              <h1 className="title is-size-1">
-                {this.calculateDateDiff(null)}
-              </h1>
+              {this.state.data.length > 0 && (
+                <h1 className="title is-size-1">{this.calculateDateDiff()}</h1>
+              )}
               <h2 className="subtitle is-size-1">Sem tela azul</h2>
               <br />
-              {this.state.data.length > 0 && this.renderTable()}
-              {this.state.data.length === 0 && (
+              {(this.state.data.length > 0 || this.state.isLoadingData) &&
+                this.renderTable()}
+              {this.state.data.length === 0 && !this.state.isLoadingData && (
                 <p className="is-size-5">Nenhum incidente por enquanto!</p>
               )}
               <br />
