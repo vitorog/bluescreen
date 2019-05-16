@@ -168,7 +168,7 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
                   return (
                     <tr key={elem.id}>
                       <td>{elem.name}</td>
-                      <td>{moment(elem.date, "YYYY-MM-DDThh:mm:ssZ").format("YYYY-MM-DD hh:mm:ss")}</td>
+                      <td>{moment(elem.date, "YYYY-MM-DDThh:mm:ssZ").format("YYYY-MM-DD HH:mm:ss")}</td>
                     </tr>
                   );
                 })}
