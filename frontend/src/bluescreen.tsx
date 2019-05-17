@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import LoadingOverlay from "react-loading-overlay";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import { FlipClock } from "./flipclock";
 
 let interval = null;
 
@@ -19,6 +20,7 @@ type BluescreenState = {
 };
 
 export default class Bluescreen extends React.Component<{}, BluescreenState> {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -31,24 +33,18 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
     };
   }
 
-  calculateDateDiff() {
-    let latest;
-    if (this.state.data.length > 0) {
-      latest = moment(this.state.data[0].date);
-    } else {
-      latest = Date.now();
-    }
+  timeDifference() {
+    let latest = (this.state.data.length > 0)
+               ? moment(this.state.data[0].date)
+               : Date.now();    
     var duration = moment.duration(moment(this.state.now).diff(latest));
-    return (
-      duration.get("days") +
-      " dia(s) " +
-      duration.get("hours") +
-      " hora(s) " +
-      duration.get("minutes") +
-      " minuto(s) " +
-      duration.get("seconds") +
-      " segundo(s)"
-    );
+
+    return {
+      days: duration.get("days"),
+      hours: duration.get("hours"),
+      minutes: duration.get("minutes"),
+      seconds: duration.get("seconds")
+    }
   }
 
   async componentDidMount() {
@@ -187,10 +183,8 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
         {this.renderModal()}
         <section className="hero is-fullheight is-info is-bold">
           <div className="hero-body">
-            <div className="container">
-              {this.state.data.length > 0 && (
-                <h1 className="title is-size-1">{this.calculateDateDiff()}</h1>
-              )}
+            <div className="container">            
+              {this.state.data.length > 0 && (<FlipClock timeDifference={this.timeDifference()}/>)}
               <h2 className="subtitle is-size-1">Sem tela azul</h2>
               <br />
               {(this.state.data.length > 0 || this.state.isLoadingData) &&
@@ -207,7 +201,7 @@ export default class Bluescreen extends React.Component<{}, BluescreenState> {
               </button>
             </div>
           </div>
-        </section>
+        </section>        
         <ToastContainer />
       </div>
     );
