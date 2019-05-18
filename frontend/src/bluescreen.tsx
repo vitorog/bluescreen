@@ -8,7 +8,7 @@ import { FlipClock } from "./flipclock";
 
 let interval = null;
 
-const API = 'https://backend-dot-bluescreen.appspot.com/incidents';
+const API = 'https://bluescreen.appspot.com/api/incidents';
 
 type BluescreenState = {
   isNameModalVisible: boolean;

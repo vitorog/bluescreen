@@ -71,11 +71,11 @@ app.use(bodyParser.json());
 // Express configuration
 app.set("port", process.env.PORT || 3001);
 
-app.get("/", (req, res) => {
-  res.send("Bluescreen Server");
+app.get("/api/", (req, res) => {
+  res.send("Bluescreen API Server");
 });
 
-app.get("/incidents", async (req, res, next) => {
+app.get("/api/incidents", async (req, res, next) => {
   try {
     const data = await getData();
     res.send(data);
@@ -84,7 +84,7 @@ app.get("/incidents", async (req, res, next) => {
   }
 });
 
-app.post("/incidents", async (req, res, next) => {
+app.post("/api/incidents", async (req, res, next) => {
   try {
     const entity = req.body;
     await saveData(entity);

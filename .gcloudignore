@@ -14,13 +14,16 @@
 .gitignore
 
 # Node.js dependencies:
-node_modules/
-
+**/node_modules/
+**/src/
 ^(.*/)?app\.yaml
 ^(.*/)?app\.yml
 ^(.*/)?#.*#
 ^(.*/)?.*~
 ^(.*/)?\..*
 ^README\..*
-^yarn.lock
-^package.json
+^(.*/)?yarn.lock
+^(.*/)?tsconfig.json
+(.*/)?*.tsx
+frontend/package.json
+backend/package.json

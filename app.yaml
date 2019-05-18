@@ -1,0 +1,18 @@
+runtime: nodejs10
+service: default
+
+handlers:
+  - url: /
+    static_files: frontend/build/index.html
+    upload: frontend/build/index.html
+    secure: always
+
+  - url: /api/(.*)
+    secure: always
+    script: auto
+
+  - url: /(.*)
+    static_files: frontend/build/\1
+    upload: frontend/build/(.*)
+    secure: always
+  

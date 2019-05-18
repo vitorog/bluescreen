@@ -1,0 +1,24 @@
+{
+  "name": "bluescreen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/build/server.js",
+    "buildAndDeploy": "cd frontend && yarn build && cd ../backend && yarn build && cd .. && gcloud app deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/datastore": "^4.0.0",
+    "@types/cors": "^2.8.5",
+    "@types/express": "^4.16.1",
+    "@types/node": "^12.0.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  }
+}
